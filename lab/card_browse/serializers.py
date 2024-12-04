@@ -28,8 +28,14 @@ class KeywordSerializer(serializers.ModelSerializer):
 		fields = "__all__"
 
 
+def quantity_validator(quantity):
+	if quantity < 1:
+		raise serializers.ValidationError("Кол-во карт должно быть положительным")
+	return quantity
+
 class OfferSerializer(serializers.ModelSerializer):
 	class Meta:
+		quantity = serializers.IntegerField(validators = [quantity_validator])
 		model = Offer
 		fields = "__all__"
 	def validate(self, attrs):
@@ -37,16 +43,12 @@ class OfferSerializer(serializers.ModelSerializer):
 		price = attrs.get("price")
 		if price < 1:
 			raise serializers.ValidationError("Цена должна быть положительной")
-		if quantity < 1:
-			raise serializers.ValidationError("Кол-во карт должно быть положительным")
+		
 		return attrs
 
 
 class UserCardSerializer(serializers.ModelSerializer):
 	class Meta:
+		quantity = serializers.IntegerField(validators = [quantity_validator])
 		model = UserCard
 		fields = "__all__"
-	def validate_quantity(self, value):
-		if value < 1:
-			raise serializers.ValidationError("Кол-во карт должно быть положительным")
-		return value
