@@ -27,6 +27,8 @@ class User(models.Model):
     id = models.IntegerField(primary_key = True)
     login = models.CharField(max_length = 32, unique = True)
     password = models.CharField(max_length = 32)
+    def __str__(self):
+        return self.login
 
 
 class UserCard(models.Model):
@@ -34,6 +36,13 @@ class UserCard(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE)
     card = models.ForeignKey(Card, on_delete = models.CASCADE)
     quantity = models.IntegerField()
+    def __str__(self):
+        return self.user.__str__() + " has " + self.card.__str__() + "(s)"
+
+
+
+
+
 
 
 class Offer(models.Model):

@@ -28,5 +28,6 @@ router.register('offers', views.OfferViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path("", views.CardList.as_view(), name="cards"),
 ]
