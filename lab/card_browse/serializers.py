@@ -9,9 +9,9 @@ class CardSerializer(serializers.ModelSerializer):
 		power = attrs.get("power")
 		toughness = attrs.get("toughness")
 		color_identity = attrs.get("color_identity")
-		if color_identity < 0 or color_identity > 31
+		if color_identity < 0 or color_identity > 31:
 			raise serializers.ValidationError("Color identity должна быть в диапазоне от 0 до 31")
-		if power < 0 or toughness < 0
+		if power < 0 or toughness < 0:
 			raise serializers.ValidationError("Здоровье и сила должны быть неотрицательными")
 		return attrs
 
@@ -35,14 +35,14 @@ class OfferSerializer(serializers.ModelSerializer):
 	def validate(self, attrs):
 		quantity = attrs.get("quantity")
 		price = attrs.get("price")
-		if price < 1
+		if price < 1:
 			raise serializers.ValidationError("Цена должна быть положительной")
-		if quantity < 1
+		if quantity < 1:
 			raise serializers.ValidationError("Кол-во карт должно быть положительным")
 		return attrs
 
 
-class UserCardSerialezer(serializers.ModelSerializer):
+class UserCardSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = UserCard
 		fields = "__all__"

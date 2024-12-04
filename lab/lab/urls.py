@@ -16,7 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from card_browse import views
+from rest_framework import routers
+
+router = routers.SimpleRouter()
+router.register('users', views.UserViewSet)
+router.register('users_cards', views.UserCardViewSet)
+router.register('cards', views.CardViewSet)
+router.register('keywords', views.KeywordViewSet)
+router.register('offers', views.OfferViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('api/', include(router.urls))
 ]
