@@ -5,9 +5,9 @@ class Card(models.Model):
     id = models.IntegerField(primary_key = True)
     name = models.CharField(max_length = 50)
     oracle_text = models.CharField(max_length = 500)
-    power = models.IntegerField(blank = True)
-    toughness = models.IntegerField(blank = True)
-    mana_cost = models.CharField(max_length = 20, blank = True)
+    power = models.IntegerField(blank = True, null = True)
+    toughness = models.IntegerField(blank = True, null = True)
+    mana_cost = models.CharField(max_length = 20, blank = True, null = True)
     color_identity = models.IntegerField()
     converted_mana_cost = models.IntegerField()
     def __str__(self):
