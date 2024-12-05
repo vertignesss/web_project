@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'card_browse.apps.BrowserConfig',
-    'simple_history'
+    'simple_history',
+    'import_export',
 ]
 
 MIDDLEWARE = [
