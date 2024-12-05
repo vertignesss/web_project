@@ -11,7 +11,7 @@ class CardSerializer(serializers.ModelSerializer):
 		color_identity = attrs.get("color_identity")
 		if color_identity < 0 or color_identity > 31:
 			raise serializers.ValidationError("Color identity должна быть в диапазоне от 0 до 31")
-		if power < 0 or toughness < 0:
+		if (power is not None and power < 0) or (toughness is not None and toughness < 0):
 			raise serializers.ValidationError("Здоровье и сила должны быть неотрицательными")
 		return attrs
 
