@@ -19,25 +19,30 @@ class CardViewSet(viewsets.ModelViewSet):
 
 
     @action(methods = ["GET"], detail = False)
-    def r_or_u_not_b_cards(self, request):
+    def w_or_u_not_hasty_cards(self, request):
         selected_cards = Card.objects.filter(
-            (~Q(color_identity&2 == 0) |
-            ~Q(color_identity&8 == 0) ) & 
-            Q(color_identity&4 == 0)
+            (Q(color_identity__gte=16) |
+            Q(color_identity__gte=8) ) & 
+            ~Q(oracle_text__contains='haste')
             )
         serial = CardSerializer(selected_cards, many = True)
 
         return Response({
-            "Красные или синие но не черные карты" : serial.data,
+            "Красные или синие карты без haste" : serial.data,
             })
 
     @action(methods = ["GET"], detail = False)
     def paid_cards_with_tough_or_pw(self, request):
         selected_cards = Card.objects.filter(
-            (~Q(power__is_null==True) |
-            ~Q(toughness__is_null==True)) &
-            Q(mana_cost__is_null==False)
+            (~Q(power=None) |
+            ~Q(toughness=None)) &
+            ~Q(converted_mana_cost=0)
             )
+        serial = CardSerializer(selected_cards, many = True)
+
+        return Response({
+            "Карты со стоимостью, у которых есть сила или здоровье" : serial.data
+            })
 
     @action(methods=["POST"], detail=True)
     def change_card(self, request, pk=None):
