@@ -30,6 +30,10 @@ class OfferResource(resources.ModelResource):
 class OfferAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
 	resource_class = OfferResource
 	list_display = ('user_card', 'quantity', 'price')
+	list_filter = ('price',)
+	fields = ["user_card", "quantity", "price"]
+	list_display_links = ('user_card',)
+	list_editable = ('quantity', 'price')
 
 class UserCardResource(resources.ModelResource):
 	class Meta:
