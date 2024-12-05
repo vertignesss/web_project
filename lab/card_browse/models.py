@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from simple_history.models import HistoricalRecords
 
 class Card(models.Model):
     id = models.IntegerField(primary_key = True)
@@ -50,7 +51,7 @@ class Offer(models.Model):
     user_card = models.ForeignKey(UserCard, on_delete = models.CASCADE)
     quantity = models.IntegerField()
     price = models.IntegerField()
-
+    history = HistoricalRecords()
 
 
 
