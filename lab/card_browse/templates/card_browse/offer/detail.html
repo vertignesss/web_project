@@ -1,0 +1,8 @@
+
+{% block content %}
+<h1>{{ offer.user_card }}</h1>
+<p class="date">
+Selling {{ offer.quantity }} at {{ offer.price }} a piece <br>
+{{offer.user_card.card|capfirst}} are {{offer.user_card.card.rarity|default:"Not set"}}
+</p>
+{% endblock %}

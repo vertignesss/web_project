@@ -1,0 +1,17 @@
+{% load card_browse_tags %}
+{% block content %}
+<h1>Cards</h1>
+
+<form method="get"> 
+	{{ form.as_p }} 
+	<button type="submit" style="display: inline;">Search</button> 
+</form>
+
+{% for card in cards %}
+<div style="width: 250px; display: inline-block;"><a href="{% url 'offer_list' card.id %}">
+{{ card.name }}
+</a><br>
+<img src="{{ card.image.url }}" alt="no_image :(" width = "200px" height = "270px">
+</div>
+{% endfor %}
+{% endblock %}

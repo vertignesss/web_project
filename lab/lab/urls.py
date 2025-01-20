@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import include, path
 from card_browse import views
 from rest_framework import routers
+from django.conf.urls.static import static
+from django.conf import settings
 
 router = routers.SimpleRouter()
 router.register('users', views.UserViewSet)
@@ -26,8 +28,18 @@ router.register('cards', views.CardViewSet)
 router.register('keywords', views.KeywordViewSet)
 router.register('offers', views.OfferViewSet)
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
-    path("", views.CardList.as_view(), name="cards"),
+    path('offer/<int:card_id>', views.offer_list, name="offer_list"),
+    path('offer/', views.offer_list, name="offer_list"),
+    path('offer/detail/<int:id>', views.offer_detail, name="offer_detail"),
+    path('offer/create', views.offer_form, name="offer_form"),
+    path('offer/create/<int:pk>', views.offer_form, name="offer_form_edit"),
+    path('form/success', views.success, name="success"),
+    path('__debug__/', include('debug_toolbar.urls')),
+    path("", views.card_list, name="card_list"),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
