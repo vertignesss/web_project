@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'simple_history',
     'import_export',
     'debug_toolbar',
+    'django_filters',
 ]
 
 MEDIA_URL = '/media/'
@@ -60,6 +61,10 @@ MIDDLEWARE = [
     'simple_history.middleware.HistoryRequestMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,  # всегда показывать панель отладки
+}
 
 INTERNAL_IPS = [
     '127.0.0.1', 

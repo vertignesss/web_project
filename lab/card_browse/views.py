@@ -2,21 +2,22 @@ from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework import viewsets, status, generics
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
-from .models import Card, User, UserCard, Offer, Keyword
+from .models import Card, User, UserCard, Offer, Keyword, CardFilter, OfferFilter, UserFilter
 from .serializers import CardSerializer, UserSerializer, UserCardSerializer, OfferSerializer, KeywordSerializer
 from rest_framework.filters import SearchFilter
 from rest_framework.decorators import action
 import django_filters
 from rest_framework.response import Response
 from .forms import OfferForm, SearchForm
-
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class CardViewSet(viewsets.ModelViewSet):
     queryset = Card.objects.all()
     serializer_class = CardSerializer
     search_fields = ["name", "oracle_text"]
-
+    filter_backends = [DjangoFilterBackend] 
+    filterset_class = CardFilter
 
     @action(methods = ["GET"], detail = False)
     def w_or_u_not_hasty_cards(self, request):
@@ -87,7 +88,8 @@ class CardViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
+    filter_backends = [DjangoFilterBackend] 
+    filterset_class = UserFilter
 
 class UserCardViewSet(viewsets.ModelViewSet):
     queryset = UserCard.objects.all()
@@ -107,7 +109,8 @@ class OfferViewSet(viewsets.ModelViewSet):
 
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
-    filter_backends = [SearchFilter]
+    filter_backends = [SearchFilter, DjangoFilterBackend] 
+    filterset_class = OfferFilter
 
 class KeywordViewSet(viewsets.ModelViewSet):
     queryset = Keyword.objects.all()
@@ -170,3 +173,7 @@ def card_list(request):
         form = SearchForm()
         cards = Card.objects.all()
     return render(request, 'card_browse/card/list.html', {'form':form, 'query':query, 'cards' : cards})
+
+def card_by_oracle(request, oracle): 
+    cards = Card.objects.filter(oracle_text__icontains=oracle) 
+    return render(request, 'card_browse/card/list.html', {'form': SearchForm(), 'query':None, 'cards':cards})

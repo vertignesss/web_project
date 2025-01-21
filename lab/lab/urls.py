@@ -33,6 +33,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
     path('offer/<int:card_id>', views.offer_list, name="offer_list"),
+    path('card/<str:oracle>', views.card_by_oracle, name="card_list"),
     path('offer/', views.offer_list, name="offer_list"),
     path('offer/detail/<int:id>', views.offer_detail, name="offer_detail"),
     path('offer/create', views.offer_form, name="offer_form"),

@@ -1,5 +1,7 @@
+{% extends "base.html" %}
 {% load card_browse_tags %}
 {% block content %}
+
 <h1>Offers, there are currently {%total_new_offers%} <a href="{% url 'offer_list' %}">new</a> orders</h1>
 {% for offer in offers %}
 <h2>
@@ -15,4 +17,5 @@ Published {{ offer.published }}
 
 <p>Add new offer: <a href="{% url 'offer_form' %}">ADD</a></p>
 <p>Back to card list: <a href="{% url 'card_list' %}">Back</a></p>
+ 
 {% endblock %}

@@ -1,0 +1,13 @@
+{% load admin_urls %}
+<div class="text-input-filter">
+	<p>adsajdlsadaldsldksd</p>
+    <form method="get">
+        {% for key, value in request.GET.items %}
+            {% if key != parameter_name %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endif %}
+        {% endfor %}
+        <input type="text" name="{{ parameter_name }}" value="{{ value|default_if_none:'' }}" placeholder="{% trans 'Enter text' %}">
+        <button type="submit" class="button">{% trans 'Go' %}</button>
+    </form>
+</div>

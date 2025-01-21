@@ -10,7 +10,7 @@ from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from django.http import HttpResponse
 from django.utils.html import format_html
-
+import django_filters
 RARITY_CHOICES = (
     ("COMMON", "Common"),
     ("UNCOMMON", "Uncommon"),
@@ -19,17 +19,17 @@ RARITY_CHOICES = (
     )
 
 class Keyword(models.Model):
-    id = models.IntegerField(primary_key = True)
+    id = models.AutoField(primary_key = True)
     name = models.CharField(max_length = 50)
-    oracle_text = models.CharField(max_length = 500)
+    oracle_text = models.TextField()
     def __str__(self):
         return self.name
 
 class Card(models.Model):
-    id = models.IntegerField(primary_key = True)
+    id = models.AutoField(primary_key = True)
     image = models.ImageField(upload_to='images/', null=True, blank=True)
     name = models.CharField(max_length = 50)
-    oracle_text = models.CharField(max_length = 500)
+    oracle_text = models.TextField(null=True, blank=True)
     power = models.IntegerField(blank = True, null = True)
     toughness = models.IntegerField(blank = True, null = True)
     mana_cost = models.CharField(max_length = 20, blank = True, null = True)
@@ -50,19 +50,25 @@ class Card(models.Model):
 class Keywords_On_Cards(models.Model):
     card = models.ForeignKey(Card, on_delete = models.CASCADE)
     Keyword = models.ForeignKey(Keyword, on_delete = models.CASCADE)
+    class Meta:
+        verbose_name_plural = "Keywords on Cards"
 
 
 class User(models.Model):
-    id = models.IntegerField(primary_key = True)
+    id = models.AutoField(primary_key = True)
     login = models.CharField(max_length = 32, unique = True)
     password = models.CharField(max_length = 32)
-    cards = models.ManyToManyField(Card, related_name="users")
     def __str__(self):
         return self.login
 
+class UserFilter(django_filters.FilterSet): 
+    login_in = django_filters.CharFilter(field_name='login', lookup_expr='icontains') 
+    class Meta: 
+        model = User 
+        fields = ['login_in']
 
 class UserCard(models.Model):
-    id = models.IntegerField(primary_key = True)
+    id = models.AutoField(primary_key = True)
     user = models.ForeignKey(User, on_delete = models.CASCADE)
     card = models.ForeignKey(Card, on_delete = models.CASCADE)
     quantity = models.IntegerField()
@@ -77,9 +83,10 @@ class NewOfferManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(published__gte=datetime.now()-timedelta(weeks=1))
 
-
-
-
+class CardFilter(django_filters.FilterSet): 
+    class Meta: 
+        model = Card 
+        fields = ['name', 'converted_mana_cost']
 
 
 
@@ -100,9 +107,20 @@ class Offer(models.Model):
 
     whole_price.short_description = "Price for All"
 
+    def __str__(self):
+        return "Offer on " + self.user_card.card.__str__() + " from " + self.user_card.user.__str__();
+
     class Meta:
         verbose_name = "Offer"
         verbose_name_plural = "Offers"
+
+class OfferFilter(django_filters.FilterSet):
+    price_min = django_filters.NumberFilter(field_name="price", lookup_expr='gte')
+    price_max = django_filters.NumberFilter(field_name="price", lookup_expr='lte')
+
+    class Meta:
+        model = Offer
+        fields = ['price_min', 'price_max']
 
 
 

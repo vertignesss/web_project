@@ -1,0 +1,22 @@
+{% load static %}
+{% load card_browse_tags %}
+
+<link rel="stylesheet" href="{% static 'card_browse/styles.css' %}">
+<!DOCTYPE html>
+<html>
+<head>
+<title>{% block title %}{% endblock %}</title>
+
+</head>
+<body>
+<div id="navbar"><h1>
+	<a href="{% url 'card_list' %}"> List of Cards</a>
+	<a href="{% url 'offer_list' %}"> List of Offers</a>
+</h1></div>
+<div id="content">
+{% block content %}
+{% endblock %}
+</div>
+
+</body>
+</html>
