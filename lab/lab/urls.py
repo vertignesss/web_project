@@ -40,7 +40,9 @@ urlpatterns = [
     path('offer/create/<int:pk>', views.offer_form, name="offer_form_edit"),
     path('form/success', views.success, name="success"),
     path('__debug__/', include('debug_toolbar.urls')),
-    path("", views.card_list, name="card_list"),
+    path("card/", views.card_list, name="card_list"),
+    path('offer/latest_offer', views.latest_offers, name='latest_offers'),
+    path("", views.main_page, name="main_page")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

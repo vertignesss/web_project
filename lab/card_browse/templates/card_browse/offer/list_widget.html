@@ -1,0 +1,33 @@
+{% load card_browse_tags %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12 mb-4">
+            {% if card_id is None %}
+            <h1 class="display-4">There are currently {% total_offers %} <a href="{% url 'offer_list' %}" class="text-primary text-dark text-decoration-none">offers</a></h1>
+            {% else %}
+            <h1 class="display-4"><a href="{% url 'offer_list' %}" class="text-primary text-dark text-decoration-none">Offers</a> on {{card_id}}</h1>
+            {% endif %}
+        </div>
+
+        {% for offer in offers %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <a href="{% url 'offer_detail' offer.id %}" class="text-dark text-decoration-none">
+                        <h5 class="card-title">{{ offer.user_card }}</h5>
+                    </a>
+                    <p class="card-text">Published {{ offer.published }}</p>
+                </div>
+                <div class="card-footer text-end">
+                    <a href="{% url 'offer_form_edit' offer.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <div class="col-12 mt-4 text-center">
+            <p>Add new offer: <a href="{% url 'offer_form' %}" class="btn btn-primary">ADD</a></p>
+            <p>Back to card list: <a href="{% url 'card_list' %}" class="btn btn-secondary">Back</a></p>
+        </div>
+    </div>
+</div>

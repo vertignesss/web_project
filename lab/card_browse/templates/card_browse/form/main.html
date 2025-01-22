@@ -1,18 +1,32 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Manage My Offer</title>
-</head>
-<body>
-    <h1>Manage My Offer</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" name="save">Save</button>
-        {% if object %}
-        <button type="submit" name="delete">Delete</button>
-        {% endif %}
-    </form>
-</body>
-</html>
+{% block content %}
+<div class="container mt-4">
+<h1 class="mb-4">Manage My Offer</h1>
+
+<form method="post" class="bg-light p-4 rounded shadow-sm">
+  {% csrf_token %}
+  
+  <div class="mb-3">
+    {{ form.user_card}}
+  </div>
+  
+  <div class="mb-3">
+    {{ form.quantity}}
+  </div>
+  
+  <div class="mb-3">
+    {{ form.price}}
+  </div>
+  
+  <div class="d-flex justify-content-between">
+    <button type="submit" name="save" class="btn btn-primary">Save</button>
+    {% if object %}
+    <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+    {% endif %}
+  </div>
+</form>
+</div>
+
+
+{% endblock %}

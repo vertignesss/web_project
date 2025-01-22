@@ -5,5 +5,4 @@
 Selling {{ offer.quantity }} at {{ offer.price }} a piece <br>
 {{offer.user_card.card|capfirst}} are {{offer.user_card.card.rarity|default:"Not set"}}
 </p>
-<a href = "{% url 'card_list' %}">To card list</a>
 {% endblock %}

@@ -1,0 +1,19 @@
+<div class="container mt-4">
+<h1 class="mb-4"><a href="{% url 'latest_offers' %}" class="text-decoration-none text-dark">Latest Offers</a>, Average price is {{avg_price}} cents</h1>
+
+<div class="row">
+  {% for offer in latest_offers %}
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm">
+      <a href="{% url 'offer_detail' offer.id %}" class="text-dark text-decoration-none">
+        <img src="{{ offer.user_card.card.image.url }}" class="card-img-top" alt="no_image :(">
+        <div class="card-body">
+          <h5 class="card-title">{{ offer.user_card.card.name }}</h5>
+          <p class="card-text">{{ offer.price }} cents</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</div>

@@ -1,21 +1,6 @@
 {% extends "base.html" %}
-{% load card_browse_tags %}
 {% block content %}
+{% include "./list_widget.html" %}
 
-<h1>Offers, there are currently {%total_new_offers%} <a href="{% url 'offer_list' %}">new</a> orders</h1>
-{% for offer in offers %}
-<h2>
-<a href="{% url 'offer_detail' offer.id %}">
-{{ offer.user_card }}
-</a>
-<a href="{% url 'offer_form_edit' offer.id %}"> Edit</a>
-</h2>
-<p class="date">
-Published {{ offer.published }}
-</p>
-{% endfor %}
 
-<p>Add new offer: <a href="{% url 'offer_form' %}">ADD</a></p>
-<p>Back to card list: <a href="{% url 'card_list' %}">Back</a></p>
- 
 {% endblock %}

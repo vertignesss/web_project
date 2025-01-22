@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework import viewsets, status, generics
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Q
+from django.db.models import Q, Avg
 from .models import Card, User, UserCard, Offer, Keyword, CardFilter, OfferFilter, UserFilter
 from .serializers import CardSerializer, UserSerializer, UserCardSerializer, OfferSerializer, KeywordSerializer
 from rest_framework.filters import SearchFilter
@@ -10,7 +10,7 @@ import django_filters
 from rest_framework.response import Response
 from .forms import OfferForm, SearchForm
 from django_filters.rest_framework import DjangoFilterBackend
-
+from django.template.loader import render_to_string
 
 class CardViewSet(viewsets.ModelViewSet):
     queryset = Card.objects.all()
@@ -126,9 +126,11 @@ class CardList(generics.ListAPIView):
 def offer_list(request, card_id = None):
     if card_id:
         offers = Offer.objects.filter(user_card__card_id = card_id)
+        name = Card.objects.filter(id=card_id)[0].name
     else:
-        offers = Offer.new.all()
-    return render(request, 'card_browse/offer/list.html', {'offers' : offers})
+        offers = Offer.objects.all()
+        name = None
+    return render(request, 'card_browse/offer/list.html', {'offers' : offers, 'card_id':name})
 
 def offer_detail(request, id):
     offer = get_object_or_404(Offer,
@@ -147,10 +149,10 @@ def offer_form(request, pk = None):
         form = OfferForm(request.POST, instance = obj)
         if 'save' in request.POST and form.is_valid:
             form.save(commit = True)
-            return redirect('../../form/success')
+            return redirect('offer_list')
         elif 'delete' in request.POST and obj:
             obj.delete()
-            return redirect('../../form/success')
+            return redirect('offer_list')
     else:
         form = OfferForm(instance = obj)
     return render(request, 'card_browse/form/main.html', {'form': form, 'object':obj})
@@ -160,8 +162,7 @@ def offer_form(request, pk = None):
 def success(request):
     return render(request, 'card_browse/form/success.html')
 
-
-def card_list(request):
+def get_cards_context(request, widget=False):
     query = None
     cards = []
     if 'query' in request.GET:
@@ -172,8 +173,33 @@ def card_list(request):
     else:
         form = SearchForm()
         cards = Card.objects.all()
-    return render(request, 'card_browse/card/list.html', {'form':form, 'query':query, 'cards' : cards})
+    if widget:
+        cards = cards[:4]
+    return {'form':form, 'query':query, 'cards' : cards}
+
+def card_list(request):
+    
+    return render(request, 'card_browse/card/list.html', get_cards_context(request))
 
 def card_by_oracle(request, oracle): 
     cards = Card.objects.filter(oracle_text__icontains=oracle) 
     return render(request, 'card_browse/card/list.html', {'form': SearchForm(), 'query':None, 'cards':cards})
+
+def get_latest_offers_context(count = None):
+    if count:
+        latest_offers = Offer.objects.order_by('-published')[:3]
+    else:
+        latest_offers = Offer.objects.order_by('-published') 
+    avg = latest_offers.aggregate(Avg('price'))['price__avg']
+    return {'latest_offers':latest_offers, 'avg_price':avg}
+
+
+
+def latest_offers(request): 
+    return render(request, 'card_browse/offer/latest_offer.html', get_latest_offers_context())
+
+def main_page(request):
+    latest_widget = render_to_string('card_browse/offer/latest_offer_widget.html', context=get_latest_offers_context(3))
+    card_widget = render_to_string('card_browse/card/list_widget.html', context={**request.GET, **get_cards_context(request, True)})
+    offer_widget = render_to_string('card_browse/offer/list_widget.html', context={'offers' : Offer.objects.all()[:3], 'card_id':None})
+    return render(request, 'card_browse/index.html', {'latest_widget' : latest_widget, 'card_widget':card_widget, 'offer_widget':offer_widget})

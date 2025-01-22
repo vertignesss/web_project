@@ -1,5 +1,29 @@
 
-img { 
-	border: 5px solid blue;
-	padding: 0px; 
+
+.offer{
+	display: inline-block;
+	outline: 1px solid black;
+	position: relative;
+}
+
+.offer_edit{
+	position: absolute;
+	right: 5px;
+}
+a:hover{
+	color: blue !important;
+}
+.offer p{
+	font-size: 20px;
+}
+
+.btn-primary:hover {
+  color: white !important;
+}
+
+.btn-secondary:hover {
+  color: white !important;
+}
+.btn-outline-primary:hover{
+	color: white !important;
 }
